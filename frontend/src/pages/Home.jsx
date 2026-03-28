@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+const BASE_URL = "https://student-info-project.onrender.com";
 function Home({ portalData }) {
   const { rollNumber, student, setStudent, activities, setActivities, error, setError } = portalData;
   const [form, setForm] = useState({ title: "", description: "", status: "Planned", date: "" });
@@ -8,8 +8,8 @@ function Home({ portalData }) {
     try {
       setError("");
       const [studentRes, activitiesRes] = await Promise.all([
-        fetch(`/api/${rollNumber}/student`),
-        fetch(`/api/${rollNumber}/activities`)
+        fetch(`${BASE_URL}/api/${rollNumber}/student`),
+        fetch(`${BASE_URL}/api/${rollNumber}/activities`)
       ]);
       if (!studentRes.ok || !activitiesRes.ok) {
         throw new Error("API request failed.");
@@ -28,7 +28,7 @@ function Home({ portalData }) {
   const addActivity = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch(`/api/${rollNumber}/activities`, {
+      const response = await fetch(`${BASE_URL}/api/${rollNumber}/activities`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form)
@@ -43,7 +43,7 @@ function Home({ portalData }) {
 
   const deleteActivity = async (id) => {
     try {
-      const response = await fetch(`/api/${rollNumber}/activities/${id}`, { method: "DELETE" });
+      const response = await fetch(`${BASE_URL}/api/${rollNumber}/activities/${id}`, { method: "DELETE" });
       if (!response.ok) throw new Error("Unable to delete activity.");
       await loadData();
     } catch (e) {
@@ -53,7 +53,7 @@ function Home({ portalData }) {
 
   const markCompleted = async (activity) => {
     try {
-      const response = await fetch(`/api/${rollNumber}/activities/${activity.id}`, {
+      const response = await fetch(`${BASE_URL}/api/${rollNumber}/activities/${activity.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -135,3 +135,4 @@ function Home({ portalData }) {
 }
 
 export default Home;
+
